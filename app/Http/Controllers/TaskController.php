@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
     function getTasks(Request $request) {
-        $tasks = Task::where("user_id", auth()->user()->id)->get();
+        $tasks = Task::where("user_id", auth()->user()->id)->paginate(5);
         return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
     }
 
@@ -20,12 +21,14 @@ class TaskController extends Controller
     function setTask(Request $request) {
         $fields = $request->validate([
             "title" => "required",
-            "description" => "required"
+            "description" => "required",
+            "image" => "nullable"
         ]);
 
         $task = Task::create([
             "title" => $fields["title"],
             "description" => $fields["description"],
+            "image" => $fields["image"],
             "user_id" => auth()->user()->id
         ]);
 
@@ -47,12 +50,14 @@ class TaskController extends Controller
         $fields = $request->validate([
             "title" => "required",
             "description" => "required",
-            "status" => "required"
+            "status" => "required",
+            "image" => "nullable"
         ]);
 
         $task->title = $fields["title"];
         $task->description = $fields["description"];
         $task->status = $fields["status"];
+        $task->image = $fields["image"];
         $task->save();
 
         return response()->json([

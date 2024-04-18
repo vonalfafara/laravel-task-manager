@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("title");
             $table->text("description");
             $table->enum("status", ["Not Started", "Ongoing", "Completed"])->default("Not Started");
+            $table->string("image")->nullable();
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")->references("id")->on("users");
             $table->timestamps();
