@@ -8,13 +8,8 @@ class UploadController extends Controller
 {
     function uploadImage(Request $request) {
         $fields = $request->validate([
-            "image" => "required|image|mimes:jpeg,png,jpg,gif",
-            "old_image" => "nullable"
+            "image" => "required|image|mimes:jpeg,png,jpg,gif"
         ]);
-
-        if (isset($fields["old_image"])) {
-            unlink(public_path("image") . "\\" . $fields["old_image"]);
-        }
 
         $image_name = time() . "." . $request->image->extension();
         $request->image->move(public_path("image"), $image_name);
